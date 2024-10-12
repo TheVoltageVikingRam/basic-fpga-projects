@@ -1,0 +1,21 @@
+//Verilog code for seven segment display
+//Define module
+
+module seven_segment(
+	input [3:0] bcd//Define all input ports
+	output reg [6:0] display
+);
+
+
+//Define always block, this block is exceuted everytime
+//the input BCD values change
+
+always @ (bcd) begin
+case (bcd)
+4'b0000 : display <= 7'b1111110; //output port 'display' is assigned with
+//seven segment equivalent of input BCD(0)
+
+4'b0001 : display <= 7'0110000; //output port 'diplay is assigned with 
+//seven segment equivalent of input BCD(1)
+
+4'b0010 : display <= 7'b1101101

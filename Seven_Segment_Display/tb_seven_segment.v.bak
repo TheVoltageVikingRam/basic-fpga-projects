@@ -1,0 +1,10 @@
+//verilog code for testbench of seven segment
+//Define module
+
+module tb_seven_segment;
+
+reg [3:0] bcd; reg clk; //Define the input
+wire [6:0] display; //Define the outputs
+// map the I/O ports with UUT
+
+seven_segment
