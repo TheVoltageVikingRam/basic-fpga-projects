@@ -10,31 +10,31 @@
 # Copying D:/quartusprime/modelsim_ase/win32aloem/../modelsim.ini to modelsim.ini
 # Modifying modelsim.ini
 # 
-# vlog -vlog01compat -work work +incdir+D:/quartusprime/Projects/Seven_Segment_Display {D:/quartusprime/Projects/Seven_Segment_Display/Seven_Segment_Display.v}
+# vlog -vlog01compat -work work +incdir+C:/Users/Ram/Documents/GitHub/basic-fpga-projects/seven-segment-on\ quartus/Seven_Segment_Display {C:/Users/Ram/Documents/GitHub/basic-fpga-projects/seven-segment-on quartus/Seven_Segment_Display/Seven_Segment_Display.v}
 # Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
-# Start time: 17:39:52 on Oct 12,2024
-# vlog -reportprogress 300 -vlog01compat -work work "+incdir+D:/quartusprime/Projects/Seven_Segment_Display" D:/quartusprime/Projects/Seven_Segment_Display/Seven_Segment_Display.v 
+# Start time: 18:27:03 on Oct 12,2024
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+C:/Users/Ram/Documents/GitHub/basic-fpga-projects/seven-segment-on quartus/Seven_Segment_Display" C:/Users/Ram/Documents/GitHub/basic-fpga-projects/seven-segment-on quartus/Seven_Segment_Display/Seven_Segment_Display.v 
 # -- Compiling module Seven_Segment_Display
 # 
 # Top level modules:
 # 	Seven_Segment_Display
-# End time: 17:39:52 on Oct 12,2024, Elapsed time: 0:00:00
+# End time: 18:27:03 on Oct 12,2024, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # 
-# vlog -vlog01compat -work work +incdir+D:/quartusprime/Projects/Seven_Segment_Display {D:/quartusprime/Projects/Seven_Segment_Display/tb_seven_segment.v}
+# vlog -vlog01compat -work work +incdir+C:/Users/Ram/Documents/GitHub/basic-fpga-projects/seven-segment-on\ quartus/Seven_Segment_Display {C:/Users/Ram/Documents/GitHub/basic-fpga-projects/seven-segment-on quartus/Seven_Segment_Display/tb_seven_segment.v}
 # Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
-# Start time: 17:39:52 on Oct 12,2024
-# vlog -reportprogress 300 -vlog01compat -work work "+incdir+D:/quartusprime/Projects/Seven_Segment_Display" D:/quartusprime/Projects/Seven_Segment_Display/tb_seven_segment.v 
+# Start time: 18:27:03 on Oct 12,2024
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+C:/Users/Ram/Documents/GitHub/basic-fpga-projects/seven-segment-on quartus/Seven_Segment_Display" C:/Users/Ram/Documents/GitHub/basic-fpga-projects/seven-segment-on quartus/Seven_Segment_Display/tb_seven_segment.v 
 # -- Compiling module tb_seven_segment
 # 
 # Top level modules:
 # 	tb_seven_segment
-# End time: 17:39:52 on Oct 12,2024, Elapsed time: 0:00:00
+# End time: 18:27:04 on Oct 12,2024, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # 
 # vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cycloneive_ver -L rtl_work -L work -voptargs="+acc"  tb_seven_segment
 # vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cycloneive_ver -L rtl_work -L work -voptargs=""+acc"" tb_seven_segment 
-# Start time: 17:39:52 on Oct 12,2024
+# Start time: 18:27:04 on Oct 12,2024
 # Loading work.tb_seven_segment
 # Loading work.Seven_Segment_Display
 # 
@@ -44,5 +44,5 @@
 # view signals
 # .main_pane.objects.interior.cs.body.tree
 # run -all
-# End time: 17:45:18 on Oct 12,2024, Elapsed time: 0:05:26
+# End time: 18:27:22 on Oct 12,2024, Elapsed time: 0:00:18
 # Errors: 0, Warnings: 0
