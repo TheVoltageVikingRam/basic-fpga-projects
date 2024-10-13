@@ -1,4 +1,5 @@
 Half Adder Circuit on Digilent Arty S7-25
+
 This project demonstrates the implementation of a half adder circuit on the Digilent Arty S7-25 FPGA board using Verilog HDL.
 
 Project Overview:
