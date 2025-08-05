@@ -39,7 +39,7 @@ This project demonstrates the Verilog-based design, simulation, synthesis, and F
   `mux_2x1.srcs/sources_1/new/mux_2x1.v`
 
 - 🔸 **Testbench**:  
-  `mux_2x1.srcs/sim_1/new/tb_mux_2x1.v`
+  `mux_2x1.srcs/sim_1/new/tb.v`
 
 ---
 
