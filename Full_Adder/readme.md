@@ -7,8 +7,8 @@ This project demonstrates the design, simulation, synthesis, and FPGA hardware i
 ## 🎥 Demo Video
 
 <p align="center">
-  <a href="https://youtu.be/KnDIoFUm8mU" target="_blank">
-    <img src="https://img.youtube.com/vi/KnDIoFUm8mU/0.jpg" alt="Full Adder FPGA Demo" width="600"/>
+  <a href="https://youtu.be/F-l0RDR43Ho" target="_blank">
+    <img src="https://img.youtube.com/vi/F-l0RDR43Ho/0.jpg" alt="Full Adder FPGA Demo" width="600"/>
   </a>
 </p>
 
@@ -73,13 +73,5 @@ This project demonstrates the design, simulation, synthesis, and FPGA hardware i
 
 ## 👨‍💻 Author
 
-**Ram Tripathi**  
-GitHub: [@ram-tripathi](https://github.com/ram-tripathi)
+**Ram Tripathi** 
 
----
-
-## 📘 Related Projects
-
-Explore more FPGA building block designs in my [GitHub Portfolio](https://github.com/ram-tripathi/basic-fpga-projects)
-
----
