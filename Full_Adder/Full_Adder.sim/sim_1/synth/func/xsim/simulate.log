@@ -1,0 +1,12 @@
+Time resolution is 1 ps
+x y c_in | s c_out
+-------------------
+0 0 0 | 0 0
+0 0 1 | 1 0
+0 1 0 | 1 0
+0 0 1 | 1 0
+1 0 0 | 1 0
+1 0 1 | 0 1
+1 1 0 | 0 1
+1 1 1 | 1 1
+$finish called at time : 80 ns : File "C:/Users/admin/Verilog_Ram/basic-fpga-projects/Full_Adder/Full_Adder.srcs/sim_1/new/tb.v" Line 66
