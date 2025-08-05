@@ -24,7 +24,7 @@ This project demonstrates the design, simulation, synthesis, and FPGA hardware i
   RTL testbench written to verify all combinations of inputs for the full adder.
 
 - **Target Device**: Arty S7-25 (Spartan-7 FPGA)  
-- **Toolchain**: Xilinx Vivado  
+- **Toolchain**: Xilinx Vivado  2023.1
 - **Simulation Tool**: Vivado XSim
 
 ---
