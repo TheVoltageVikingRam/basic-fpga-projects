@@ -48,57 +48,112 @@ sudo apt update
 echo "📦 Installing dependencies..."
 sudo apt install -y \
     wget \
-    libqt5multimedia5 \
-    libqt5multimedia5-plugins \
-    libqt5scripttools5 \
-    libqt5serialport5 \
-    libqt5widgets5 \
-    libqt5gui5 \
-    libqt5core5a \
-    libqt5svg5 \
-    libqt5printsupport5 \
-    libqt5network5 \
-    libqt5multimediagsttools5 2>/dev/null || true
+    libusb-1.0-0 \
+    libftdi1-2 \
+    libc6 2>/dev/null || true
+
+# For armhf on arm64, install multiarch support
+if [[ "$ARCH" == "arm64" ]]; then
+    echo "📦 Enabling multiarch support for better compatibility..."
+    sudo dpkg --add-architecture armhf
+    sudo apt update
+    sudo apt install -y libc6:armhf libstdc++6:armhf libusb-1.0-0:armhf 2>/dev/null || true
+fi
 
 # Create temp directory
 TEMP_DIR=$(mktemp -d)
 cd "$TEMP_DIR"
 
-echo "⬇️  Downloading Digilent packages for $ARCH..."
+echo "⬇️  Searching for available Digilent packages..."
+
+# Function to find working runtime version
+find_working_runtime() {
+    local arch=$1
+    local versions=("2.27.9" "2.26.1" "2.25.0" "2.24.1" "2.23.1" "2.22.0" "2.21.2" "2.20.1" "2.19.2" "2.18.3" "2.17.1" "2.16.6" "2.16.1")
+    
+    for ver in "${versions[@]}"; do
+        local url="https://digilent.s3.amazonaws.com/Software/Adept2Runtime/$ver/digilent.adept.runtime_$ver-$arch.deb"
+        if wget --spider -q "$url" 2>/dev/null; then
+            echo "$ver"
+            return 0
+        fi
+    done
+    return 1
+}
 
 # Download appropriate packages based on architecture
 if [[ "$ARCH" == "arm64" ]]; then
-    RUNTIME_URL="https://digilent.s3.amazonaws.com/Software/Adept2Runtime/2.27.9/digilent.adept.runtime_2.27.9-arm64.deb"
-    UTILITIES_URL="https://digilent.s3.amazonaws.com/Software/AdeptUtilities/2.7.1/digilent.adept.utilities_2.7.1-arm64.deb"
-    RUNTIME_FILE="digilent.adept.runtime_2.27.9-arm64.deb"
-    UTILITIES_FILE="digilent.adept.utilities_2.7.1-arm64.deb"
+    echo "🔍 Finding available runtime version for arm64..."
+    
+    # First try to find arm64 runtime
+    RUNTIME_VERSION=$(find_working_runtime "arm64")
+    
+    if [ -n "$RUNTIME_VERSION" ]; then
+        echo "✅ Found arm64 runtime version: $RUNTIME_VERSION"
+        RUNTIME_URL="https://digilent.s3.amazonaws.com/Software/Adept2Runtime/$RUNTIME_VERSION/digilent.adept.runtime_$RUNTIME_VERSION-arm64.deb"
+        RUNTIME_FILE="digilent.adept.runtime_$RUNTIME_VERSION-arm64.deb"
+        UTILITIES_URL="https://digilent.s3.amazonaws.com/Software/AdeptUtilities/2.7.1/digilent.adept.utilities_2.7.1-arm64.deb"
+        UTILITIES_FILE="digilent.adept.utilities_2.7.1-arm64.deb"
+    else
+        echo "⚠️  No arm64 runtime found. Using armhf packages with multiarch..."
+        RUNTIME_VERSION=$(find_working_runtime "armhf")
+        
+        if [ -z "$RUNTIME_VERSION" ]; then
+            echo "❌ No compatible runtime version found for ARM"
+            exit 1
+        fi
+        
+        echo "✅ Found armhf runtime version: $RUNTIME_VERSION"
+        RUNTIME_URL="https://digilent.s3.amazonaws.com/Software/Adept2Runtime/$RUNTIME_VERSION/digilent.adept.runtime_$RUNTIME_VERSION-armhf.deb"
+        RUNTIME_FILE="digilent.adept.runtime_$RUNTIME_VERSION-armhf.deb"
+        UTILITIES_URL="https://digilent.s3.amazonaws.com/Software/AdeptUtilities/2.7.1/digilent.adept.utilities_2.7.1-armhf.deb"
+        UTILITIES_FILE="digilent.adept.utilities_2.7.1-armhf.deb"
+    fi
 else
-    RUNTIME_URL="https://digilent.s3.amazonaws.com/Software/Adept2Runtime/2.27.9/digilent.adept.runtime_2.27.9-armhf.deb"
+    # armhf architecture
+    echo "🔍 Finding available runtime version for armhf..."
+    RUNTIME_VERSION=$(find_working_runtime "armhf")
+    
+    if [ -z "$RUNTIME_VERSION" ]; then
+        echo "❌ No compatible runtime version found for armhf"
+        exit 1
+    fi
+    
+    echo "✅ Found armhf runtime version: $RUNTIME_VERSION"
+    RUNTIME_URL="https://digilent.s3.amazonaws.com/Software/Adept2Runtime/$RUNTIME_VERSION/digilent.adept.runtime_$RUNTIME_VERSION-armhf.deb"
+    RUNTIME_FILE="digilent.adept.runtime_$RUNTIME_VERSION-armhf.deb"
     UTILITIES_URL="https://digilent.s3.amazonaws.com/Software/AdeptUtilities/2.7.1/digilent.adept.utilities_2.7.1-armhf.deb"
-    RUNTIME_FILE="digilent.adept.runtime_2.27.9-armhf.deb"
     UTILITIES_FILE="digilent.adept.utilities_2.7.1-armhf.deb"
 fi
 
 # Download packages with progress
-echo "  📥 Downloading Adept Runtime..."
+echo "  📥 Downloading Adept Runtime v$RUNTIME_VERSION..."
 wget -q --show-progress -O "$RUNTIME_FILE" "$RUNTIME_URL"
 
-echo "  📥 Downloading Adept Utilities..."
+echo "  📥 Downloading Adept Utilities v2.7.1..."
 wget -q --show-progress -O "$UTILITIES_FILE" "$UTILITIES_URL"
 
 # Install packages
 echo "📦 Installing Adept Runtime..."
-sudo dpkg -i "$RUNTIME_FILE" >/dev/null
+sudo dpkg -i "$RUNTIME_FILE" || {
+    echo "⚠️  Fixing dependencies..."
+    sudo apt install -f -y
+    sudo dpkg -i "$RUNTIME_FILE"
+}
 
 echo "📦 Installing Adept Utilities..."
-sudo dpkg -i "$UTILITIES_FILE" >/dev/null
+sudo dpkg -i "$UTILITIES_FILE" || {
+    echo "⚠️  Fixing dependencies..."
+    sudo apt install -f -y
+    sudo dpkg -i "$UTILITIES_FILE"
+}
 
-# Fix any dependency issues
-sudo apt install -f -y >/dev/null 2>&1
+# Update library cache
+sudo ldconfig
 
 # Set up USB permissions
 echo "🔐 Setting up USB permissions..."
-sudo usermod -a -G dialout "$USER"
+sudo usermod -a -G dialout "$USER" 2>/dev/null || true
 
 # Create udev rules
 echo "📋 Creating udev rules..."
@@ -119,6 +174,17 @@ sudo udevadm trigger
 cd /
 rm -rf "$TEMP_DIR"
 
+# Test installation
+echo ""
+echo "🧪 Testing installation..."
+if command -v djtgcfg >/dev/null 2>&1; then
+    echo "✅ djtgcfg installed successfully!"
+    djtgcfg --version 2>/dev/null || echo "   (Version check requires USB permissions - reboot needed)"
+else
+    echo "❌ Installation verification failed"
+    exit 1
+fi
+
 echo ""
 echo "✅ Installation completed successfully!"
 echo ""
@@ -132,13 +198,16 @@ echo ""
 echo "3. 🔌 Connect your Digilent FPGA board and verify detection"
 echo ""
 echo "4. 🎯 Program .bit files with:"
-echo "   djtgcfg prog -d [DeviceName] -i 0 -f your_design.bit -v"
+echo "   djtgcfg prog -d [DeviceName] -i 0 -f your_design.bit"
 echo ""
 echo "📚 Common device names:"
 echo "   • Arty S7:    ArtyS7"
 echo "   • Arty A7:    ArtyA7" 
 echo "   • Basys 3:    Basys3"
 echo "   • Nexys A7:   NexysA7"
+echo "   • Cmod A7:    CmodA7"
+echo ""
+echo "📖 For more options: djtgcfg --help"
 echo ""
 echo "🎉 Your Raspberry Pi FPGA Programming Station is ready!"
 echo ""
