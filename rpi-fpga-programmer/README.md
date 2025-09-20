@@ -25,13 +25,13 @@ Transform your Raspberry Pi into a powerful, portable FPGA programming station f
 
 ## 🚀 Quick Start
 
-### 1. One-Command Installation
+### One-Command Installation
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/yourusername/rpi-fpga-programmer/main/install.sh | bash
 ```
 
-### 2. Manual Installation
+### Manual Installation
 
 ```bash
 # Check your architecture
@@ -65,7 +65,7 @@ sudo udevadm control --reload-rules && sudo udevadm trigger
 sudo reboot
 ```
 
-### 3. Test Your Setup
+### Test Your Setup
 
 ```bash
 # Connect your FPGA board and check detection
@@ -113,21 +113,38 @@ djtgcfg prog -d ArtyS7 -i 0 -f design.bit -v --progress
 | Cmod S7 | `CmodS7` | ✅ |
 | Analog Discovery | `ADiscovery` | ✅ |
 
+## ⚡ Performance
+
+| Operation | Raspberry Pi 5 | Raspberry Pi 4 |
+|-----------|----------------|----------------|
+| Arty S7 Programming | ~8 seconds | ~12 seconds |
+| Device Detection | <1 second | <1 second |
+| Large Bitstream (>1MB) | ~15 seconds | ~25 seconds |
+
 ## 📊 Development Workflow
 
-```mermaid
-graph LR
-    A[Design in Vivado<br/>x86_64 PC] --> B[Generate .bit file]
-    B --> C[Transfer to Pi<br/>USB/SCP/Git]
-    C --> D[Program FPGA<br/>djtgcfg prog]
-    D --> E[Test Hardware]
-    E --> F[Debug/Iterate]
-    F --> A
+Since Vivado doesn't run on ARM processors, use this hybrid approach:
+
+1. **Design Phase**: Use Vivado on x86_64 computer
+2. **Transfer Phase**: Move .bit files to Raspberry Pi  
+3. **Programming Phase**: Use Pi for programming and testing
+
+## 🌐 Remote Development Setup
+
+### SSH Programming
+```bash
+# Program remotely via SSH
+ssh pi@raspberrypi.local "djtgcfg prog -d ArtyS7 -i 0 -f /tmp/design.bit -v"
+
+# Copy and program in one command  
+scp design.bit pi@raspberrypi.local:/tmp/ && ssh pi@raspberrypi.local "djtgcfg prog -d ArtyS7 -i 0 -f /tmp/design.bit -v"
 ```
 
-Since Vivado doesn't run on ARM processors, use this hybrid approach:
-1. **Design Phase**: Use Vivado on x86_64 computer
-2. **Programming Phase**: Use Raspberry Pi for programming and testing
+### Auto-sync with rsync
+```bash
+# Auto-sync Vivado output to Pi
+rsync -av ./project.runs/impl_1/*.bit pi@raspberrypi.local:~/bitfiles/
+```
 
 ## 🛠️ Troubleshooting
 
@@ -165,30 +182,19 @@ sudo udevadm trigger
 sudo reboot
 ```
 
-## 📁 Project Structure
-
-```
-rpi-fpga-programmer/
-├── README.md                 # This file
-├── install.sh               # Automated installation script
-├── examples/
-│   ├── blinky.bit           # Simple LED blinker example
-│   └── counter.bit          # 7-segment counter example
-├── scripts/
-│   ├── program.sh           # Programming wrapper script
-│   └── detect-boards.sh     # Board detection utility
-└── docs/
-    ├── TROUBLESHOOTING.md   # Detailed troubleshooting
-    └── BOARDS.md            # Supported boards list
+### Docker Repository Error
+If you see Docker repository errors during apt update:
+```bash
+sudo rm /etc/apt/sources.list.d/docker.list
+sudo apt update
 ```
 
 ## 🤝 Contributing
 
-Contributions welcome! Please read our [Contributing Guidelines](CONTRIBUTING.md) first.
+Contributions welcome! Here's how you can help:
 
-### Ways to Contribute
 - 🐛 Report bugs and issues
-- 📝 Improve documentation
+- 📝 Improve documentation  
 - ✨ Add support for new boards
 - 🧪 Test on different Pi models
 - 🔧 Submit bug fixes and improvements
@@ -212,8 +218,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## 📞 Support
 
 - **Issues**: [GitHub Issues](https://github.com/yourusername/rpi-fpga-programmer/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/rpi-fpga-programmer/discussions)
-- **Community**: [Discord Server](https://discord.gg/yourinvite)
+- **Community**: [Digilent Forum](https://forum.digilent.com/)
 
 ---
 
