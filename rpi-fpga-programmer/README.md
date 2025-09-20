@@ -28,7 +28,7 @@ Transform your Raspberry Pi into a powerful, portable FPGA programming station f
 ### One-Command Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/TheVoltageVikingRam/basic-fpga-projects/rpi-fpga-programmer/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/TheVoltageVikingRam/rpi-fpga-programmer/install.sh | bash
 ```
 
 ### Manual Installation
